@@ -132,7 +132,7 @@ module RuboCop
     end
 
     def file_checksum(file, config_store)
-      Digest::MD5.hexdigest(Dir.pwd + file + IO.binread(file) +
+      Digest::MD5.hexdigest(Dir.pwd + file + Digest::MD5.file(file).digest +
                             File.stat(file).mode.to_s +
                             config_store.for(file).signature)
     rescue Errno::ENOENT
