@@ -29,10 +29,10 @@ module RuboCop
       @options_config = ConfigLoader.default_configuration
     end
 
-    def for(file_or_dir)
+    def for(file_or_dir, stat=File.stat(file_or_dir))
       return @options_config if @options_config
 
-      dir = if File.directory?(file_or_dir)
+      dir = if stat.directory?
               file_or_dir
             else
               File.dirname(file_or_dir)
