@@ -133,9 +133,10 @@ module RuboCop
 
     def file_checksum(file, config_store)
       stat = File.stat(file)
-      Digest::MD5.hexdigest(Dir.pwd + file + Digest::MD5.file(file).digest +
-                            stat.mode.to_s +
-                            config_store.for(file, stat).signature)
+      digester = Digest::MD5.new
+      digester.update(Dir.pwd + file + stat.mode.to_s + config_store.for(file, stat).signature)
+      digester.file(file)
+      digester.hexdigest
     rescue Errno::ENOENT
       # Spurious files that come and go should not cause a crash, at least not
       # here.
