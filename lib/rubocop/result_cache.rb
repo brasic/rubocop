@@ -84,6 +84,7 @@ module RuboCop
                         relevant_options_digest(options),
                         file_checksum(file, config_store))
       @cached_data = CachedData.new(file)
+      @pwd = Dir.pwd
     end
 
     def valid?
@@ -134,7 +135,7 @@ module RuboCop
     def file_checksum(file, config_store)
       stat = File.stat(file)
       digester = Digest::MD5.new
-      digester.update(Dir.pwd + file + stat.mode.to_s + config_store.for(file, stat).signature)
+      digester.update(@pwd + file + stat.mode.to_s + config_store.for(file, stat).signature)
       digester.file(file)
       digester.hexdigest
     rescue Errno::ENOENT
